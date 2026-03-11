@@ -23,6 +23,10 @@ class TestWebApp(unittest.TestCase):
         self.assertIn("overflow: hidden;", html)
         self.assertIn("function scrollChatToBottom", html)
         self.assertIn("window.addEventListener(\"resize\"", html)
+        self.assertIn("UrbanComp Lab @ China University of Geosciences (Wuhan)", html)
+        self.assertIn("https://github.com/whuyao/GeoClaw-OpenAI", html)
+        self.assertIn("License: MIT", html)
+        self.assertIn("TrackIntel-based mobility/network analysis algorithms", html)
 
     def test_session_crud(self) -> None:
         old = dict(os.environ)

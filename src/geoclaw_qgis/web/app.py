@@ -393,47 +393,66 @@ def _page_html() -> str:
   <title>GeoClaw Web Trial</title>
   <style>
     :root {
-      --bg: #f4f8fb;
-      --surface: #ffffff;
-      --ink: #1f2933;
-      --muted: #5f6c7b;
-      --brand: #005f73;
+      --bg: #eef3fb;
+      --surface: rgba(255, 255, 255, 0.76);
+      --surface-strong: #ffffff;
+      --ink: #1d2a38;
+      --muted: #5b6877;
+      --brand: #0f4c81;
+      --brand-soft: #2f6fa8;
       --accent: #ee9b00;
       --danger: #b00020;
       --ok: #1f8f4a;
-      --line: #d8e2ea;
+      --line: rgba(111, 139, 168, 0.26);
+      --shadow-lg: 0 24px 60px rgba(14, 40, 70, 0.16);
+      --shadow-md: 0 12px 32px rgba(14, 40, 70, 0.12);
     }
     html, body { height: 100%; }
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-family: "Avenir Next", "Segoe UI Variable", "PingFang SC", "Source Han Sans SC", sans-serif;
       color: var(--ink);
-      background: radial-gradient(circle at top right, #d7eff7 0%, var(--bg) 45%, #eef4f7 100%);
+      background:
+        radial-gradient(1200px 500px at -5% -8%, #d8e8ff 0%, transparent 60%),
+        radial-gradient(900px 450px at 105% -10%, #c6e6ec 0%, transparent 58%),
+        linear-gradient(160deg, #f4f8fe 0%, #eef3fb 35%, #e8f0f7 100%);
       min-height: 100vh;
       height: 100dvh;
       overflow: hidden;
     }
     .shell {
-      max-width: 1280px;
+      max-width: 1360px;
       margin: 0 auto;
       padding: clamp(10px, 2vw, 18px);
       display: grid;
       grid-template-rows: auto 1fr;
-      gap: 14px;
+      gap: clamp(10px, 1.2vw, 14px);
       min-height: 100dvh;
       height: 100dvh;
     }
     .header {
-      background: linear-gradient(135deg, #003845, #005f73);
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(120deg, #082f5a 0%, #0f4c81 52%, #235f96 100%);
       color: #fff;
-      border-radius: 14px;
-      padding: 16px 20px;
-      box-shadow: 0 8px 26px rgba(0, 0, 0, 0.14);
+      border-radius: 18px;
+      padding: 18px 22px;
+      box-shadow: var(--shadow-lg);
+    }
+    .header::after {
+      content: "";
+      position: absolute;
+      inset: -40% auto auto 55%;
+      width: 420px;
+      height: 240px;
+      transform: rotate(18deg);
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.03) 68%, transparent 100%);
+      pointer-events: none;
     }
     .header h1 { margin: 0; font-size: 22px; letter-spacing: .2px; }
-    .meta { margin-top: 8px; font-size: 13px; color: #d8eff6; display: flex; gap: 12px; flex-wrap: wrap; }
-    .meta a { color: #ffd166; }
+    .meta { margin-top: 9px; font-size: 13px; color: #dbecff; display: flex; gap: 12px; flex-wrap: wrap; }
+    .meta a { color: #ffe19f; text-underline-offset: 2px; }
     .layout {
       display: grid;
       grid-template-columns: 320px 1fr;
@@ -441,20 +460,38 @@ def _page_html() -> str:
       min-height: 0;
       height: 100%;
     }
+    .legal {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #4f5f72;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(246, 251, 255, 0.78));
+      backdrop-filter: blur(6px);
+      display: grid;
+      gap: 4px;
+    }
+    .legal a { color: #0f4c81; text-underline-offset: 2px; }
     .panel {
       background: var(--surface);
       border: 1px solid var(--line);
-      border-radius: 14px;
-      box-shadow: 0 6px 20px rgba(31, 41, 51, 0.08);
+      border-radius: 16px;
+      box-shadow: var(--shadow-md);
+      backdrop-filter: blur(8px);
       min-height: 0;
     }
-    .panel h2 { margin: 0; font-size: 16px; }
+    .panel h2 {
+      margin: 0;
+      font-size: 16px;
+      letter-spacing: 0.2px;
+    }
     .panel-head {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 12px 14px;
       border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(246, 251, 255, 0.75));
     }
     .sessions-panel {
       display: grid;
@@ -471,28 +508,43 @@ def _page_html() -> str:
     }
     .session-item {
       border: 1px solid var(--line);
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 10px;
-      background: #fafcfd;
+      background: linear-gradient(180deg, #ffffff, #f7fbff);
       cursor: pointer;
-      transition: 120ms;
+      transition: 160ms ease;
     }
-    .session-item:hover { border-color: var(--brand); }
-    .session-item.active { border-color: var(--brand); background: #e9f6f9; }
+    .session-item:hover {
+      border-color: #7ea6d1;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(31, 79, 128, 0.12);
+    }
+    .session-item.active {
+      border-color: var(--brand);
+      background: linear-gradient(180deg, #eaf3ff, #e7f2ff);
+      box-shadow: inset 0 0 0 1px rgba(15, 76, 129, 0.12);
+    }
     .sid { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; }
     .session-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
     .session-actions { margin-top: 8px; display: flex; justify-content: flex-end; }
     button {
       border: 1px solid var(--line);
-      border-radius: 10px;
+      border-radius: 11px;
       background: #fff;
       padding: 7px 11px;
       cursor: pointer;
       font-weight: 600;
       color: var(--ink);
+      transition: 140ms ease;
     }
-    button.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
-    button.warn { border-color: var(--danger); color: var(--danger); }
+    button:hover:not(:disabled) { transform: translateY(-1px); }
+    button.primary {
+      background: linear-gradient(135deg, var(--brand), var(--brand-soft));
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 8px 18px rgba(15, 76, 129, 0.3);
+    }
+    button.warn { border-color: #e8b3be; color: var(--danger); background: #fff6f8; }
     button:disabled { opacity: .55; cursor: not-allowed; }
     .chat-panel {
       display: grid;
@@ -507,19 +559,23 @@ def _page_html() -> str:
       padding: 12px 14px;
       border-bottom: 1px solid var(--line);
       font-size: 12px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(245, 250, 255, 0.76));
     }
     .chip {
       border-radius: 999px;
       padding: 4px 10px;
       border: 1px solid var(--line);
-      background: #f5f9fb;
+      background: linear-gradient(180deg, #f8fbff, #eff6ff);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.65);
     }
     .chat-scroll {
       padding: 16px;
       overflow: auto;
       display: grid;
       gap: 12px;
-      background: linear-gradient(180deg, #fbfeff 0%, #f6fafc 100%);
+      background:
+        radial-gradient(600px 180px at 100% 0%, rgba(216, 232, 255, 0.36), transparent 70%),
+        linear-gradient(180deg, #fbfeff 0%, #f2f8ff 100%);
       min-height: 0;
       overscroll-behavior: contain;
     }
@@ -530,15 +586,26 @@ def _page_html() -> str:
       border: 1px solid var(--line);
       white-space: pre-wrap;
       line-height: 1.45;
+      box-shadow: 0 5px 16px rgba(17, 45, 76, 0.08);
+      animation: msgIn 180ms ease both;
     }
-    .msg.user { justify-self: end; background: #dff2f7; border-color: #b3ddea; }
-    .msg.assistant { justify-self: start; background: #ffffff; }
+    .msg.user {
+      justify-self: end;
+      background: linear-gradient(135deg, #dcecff, #d8f2fb);
+      border-color: #b7d8ef;
+    }
+    .msg.assistant {
+      justify-self: start;
+      background: #ffffff;
+      border-color: #d6e3ef;
+    }
     .msg.meta { justify-self: center; max-width: 100%; font-size: 12px; color: var(--muted); }
     .composer {
       border-top: 1px solid var(--line);
       padding: 12px;
       display: grid;
       gap: 10px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(248, 252, 255, 0.88));
     }
     textarea {
       width: 100%;
@@ -546,9 +613,11 @@ def _page_html() -> str:
       max-height: 32vh;
       resize: vertical;
       border: 1px solid var(--line);
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 10px;
       font: inherit;
+      background: var(--surface-strong);
+      box-shadow: inset 0 1px 2px rgba(11, 45, 79, 0.08);
     }
     .composer-row {
       display: flex;
@@ -568,11 +637,26 @@ def _page_html() -> str:
       font-size: 13px;
       background: #ffedf0;
       border: 1px solid #ffc9d1;
-      border-radius: 10px;
+      border-radius: 11px;
       padding: 8px 10px;
       display: none;
     }
     .ok { color: var(--ok); }
+    @keyframes msgIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .session-list::-webkit-scrollbar,
+    .chat-scroll::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    .session-list::-webkit-scrollbar-thumb,
+    .chat-scroll::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #aec5de, #89a9cb);
+      border-radius: 999px;
+      border: 2px solid rgba(255, 255, 255, 0.7);
+    }
     @media (max-width: 980px) {
       body { overflow: auto; }
       .shell { height: auto; min-height: 100dvh; }
@@ -627,6 +711,12 @@ def _page_html() -> str:
         </div>
       </main>
     </section>
+    <footer class=\"legal\">
+      <div><strong>GeoClaw-OpenAI</strong> © 2026 UrbanComp Lab @ China University of Geosciences (Wuhan). All rights reserved.</div>
+      <div>GitHub Repository: <a target=\"_blank\" href=\"https://github.com/whuyao/GeoClaw-OpenAI\">https://github.com/whuyao/GeoClaw-OpenAI</a></div>
+      <div>License: MIT (see <a target=\"_blank\" href=\"https://github.com/whuyao/GeoClaw-OpenAI/blob/master/LICENSE\">LICENSE</a>).</div>
+      <div>Third-party attribution: TrackIntel-based mobility/network analysis algorithms are credited to the TrackIntel project and authors.</div>
+    </footer>
   </div>
 
 <script>
